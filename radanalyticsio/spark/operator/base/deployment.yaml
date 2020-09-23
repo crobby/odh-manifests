@@ -18,7 +18,7 @@ spec:
       serviceAccountName: spark-operator
       containers:
       - name: spark-operator
-        image: quay.io/radanalyticsio/spark-operator:1.0.7
+        image: quay.io/croberts/spark-operator:newclient
         env:
         #- name: WATCH_NAMESPACE
         #  value: "~"
