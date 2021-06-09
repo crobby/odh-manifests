@@ -14,23 +14,17 @@ Open Data Hub is an end-to-end AI/ML platform on top of OpenShift Container Plat
 
 * [JupyterHub](jupyterhub/README.md)
 * [Airflow](airflow/README.md)
-* [Argo](odhargo/README.md)
+* [Argo Workflows](odhargo/README.md)
 * [Grafana](grafana/README.md) & [Prometheus](prometheus/README.md)
 * [Spark Operator](radanalyticsio/README.md)
 * [Kafka](kafka/README.md)
 * [Superset](superset/README.md)
 * [AI Library](ai-library/README.md)
-
-
-Some components are still in process of conversion from Ansible Operator based version on [Gitlab](https://gitlab.com/opendatahub/opendatahub-operator/)
-
-* Seldon
+* [Seldon](odhseldon/README.md)
 * Data Catalog
-    * Hue
-    * Hive
-    * Thrift Server
-
-
+    * [Hue](hue/README.md)
+    * [Thrift Server](thriftserver/README.md)
+* [Trino](trino/README.md)
 
 ## Deploy
 

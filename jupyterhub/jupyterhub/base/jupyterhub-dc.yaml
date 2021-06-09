@@ -1,6 +1,9 @@
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
+  annotations:
+      app.openshift.io/connects-to: >-
+        [{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"jupyterhub-db"}]
   labels:
     app: jupyterhub
   name: jupyterhub
@@ -32,15 +35,15 @@ spec:
         - name: JUPYTERHUB_DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: jupyterhub
+              name: $(jupyterhub_secret)
               key: POSTGRESQL_PASSWORD
         - name: JUPYTERHUB_DATABASE_HOST
           value: jupyterhub-db
-        - name: JUPYTERHUB_COOKIE_SECRET
+        - name: PROMETHEUS_API_TOKEN
           valueFrom:
             secretKeyRef:
-              name: jupyterhub
-              key: COOKIE_SECRET
+              name: $(jupyterhub_secret)
+              key: PROMETHEUS_API_TOKEN
         - name: APP_SCRIPT
           value: /opt/app-root/builder/run
         - name: GPU_MODE
@@ -58,6 +61,31 @@ spec:
             configMapKeyRef:
               name: jupyterhub-cfg
               key: singleuser_pvc_size
+        - name: JUPYTERHUB_ADMIN_GROUPS
+          valueFrom:
+            configMapKeyRef:
+              name: $(jupyterhub_groups_config)
+              key: admin_groups
+        - name: JUPYTERHUB_ALLOWED_GROUPS
+          valueFrom:
+            configMapKeyRef:
+              name: $(jupyterhub_groups_config)
+              key: allowed_groups
+        - name: JUPYTERHUB_CRYPT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: $(jupyterhub_secret)
+              key: JUPYTERHUB_CRYPT_KEY
+        - name: JPY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: $(jupyterhub_secret)
+              key: JPY_COOKIE_SECRET
+        - name: CONFIGPROXY_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(jupyterhub_secret)
+              key: CONFIGPROXY_AUTH_TOKEN
         image: jupyterhub-img:latest
         name: jupyterhub
         ports:
@@ -65,6 +93,10 @@ spec:
           protocol: TCP
         resources:
           limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: "1"
             memory: 1Gi
         volumeMounts:
         - mountPath: /opt/app-root/configs
@@ -76,7 +108,7 @@ spec:
         - name: JUPYTERHUB_DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: jupyterhub
+              name: $(jupyterhub_secret)
               key: POSTGRESQL_PASSWORD
         - name: JUPYTERHUB_DATABASE_HOST
           value: jupyterhub-db
@@ -84,8 +116,14 @@ spec:
         name: wait-for-database
         resources:
           limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: "1"
             memory: 1Gi
       serviceAccountName: jupyterhub-hub
+      imagePullSecrets:
+      - name: addon-managed-odh-pullsecret
       volumes:
       - configMap:
           defaultMode: 420
@@ -93,3 +131,4 @@ spec:
         name: config
   triggers:
   - type: ConfigChange
+

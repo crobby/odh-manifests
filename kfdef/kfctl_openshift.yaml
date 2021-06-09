@@ -10,23 +10,11 @@ spec:
         name: manifests
         path: odh-common
     name: odh-common
-  #Note: AI Library components requires seldon do be deployed first, make sure to place seldon before AIlibrary
   - kustomizeConfig:
       repoRef:
         name: manifests
         path: odhseldon/cluster
     name: odhseldon
-  - kustomizeConfig:
-      repoRef:
-        name: manifests
-        path: ai-library/cluster
-    name: ai-library-cluster
-  - kustomizeConfig:
-      repoRef:
-        name: manifests
-        path: ai-library/operator
-    # Note:  In order to utilize ai-library, you also need to have Seldon installed
-    name: ai-library-operator
   - kustomizeConfig:
       parameters:
       # Note: The admin username is admin
@@ -84,6 +72,13 @@ spec:
     name: jupyterhub
   - kustomizeConfig:
       overlays:
+        - jupyterhub-deployment-patch
+      repoRef:
+        name: kf-jupyterhub-patch
+        path: jupyterhub/jupyterhub/overrides
+    name: jupyterhub
+  - kustomizeConfig:
+      overlays:
       #- cuda
       - additional
       repoRef:
@@ -120,4 +115,6 @@ spec:
     uri: https://github.com/kubeflow/manifests/archive/v1.2-branch.tar.gz
   - name: manifests
     uri: https://github.com/opendatahub-io/odh-manifests/tarball/master
+  - name: kf-jupyterhub-patch
+    uri: https://github.com/red-hat-data-services/odh-manifests/tarball/master
   version: master

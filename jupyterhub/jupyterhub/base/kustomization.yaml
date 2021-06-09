@@ -4,6 +4,8 @@ resources:
 - jupyterhub-configmap.yaml
 - jupyterhub-secret.yaml
 - jupyterhub-db-pvc.yaml
+- jupyterhub-db-probe.yaml
+- jupyterhub-db-probe-svc.yaml
 - jupyterhub-db-dc.yaml
 - jupyterhub-db-service.yaml
 - jupyterhub-img-imagestream.yaml
@@ -12,9 +14,12 @@ resources:
 - jupyterhub-serviceaccount.yaml
 - jupyterhub-role.yaml
 - jupyterhub-rolebinding.yaml
+- jupyterhub-nodereader-rolebinding.yaml
 - jupyterhub-route.yaml
 - jupyterhub-singleuser-profiles-configmap.yaml
+- jupyterhub-singleuser-profiles-sizes-configmap.yaml
 - jupyterhub-spark-operator-configmap.yaml
+- jupyterhub-groups-configmap.yaml
 
 commonLabels:
   opendatahub.io/component: "true"
@@ -47,5 +52,19 @@ vars:
     apiVersion: v1
   fieldref:
     fieldpath: data.s3_endpoint_url
+- name: jupyterhub_groups_config
+  objref:
+    kind: ConfigMap
+    name: parameters
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.jupyterhub_groups_config
+- name: jupyterhub_secret
+  objref:
+    kind: ConfigMap
+    name: parameters
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.jupyterhub_secret
 configurations:
 - params.yaml
