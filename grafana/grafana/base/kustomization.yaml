@@ -1,12 +1,17 @@
-
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 namespace: openshift-operators
+
 commonLabels:
   opendatahub.io/component: "true"
   component.opendatahub.io/name: grafana
+
+bases:
+  - ./argo-dashboards/
+  - ./jupyterhub-dashboards/
+  - ./kafka-dashboards/
+
 resources:
 - datasource.yaml
-- dashboard.yaml
-- argo-dashboard.yaml
 - grafana.yaml

@@ -21,6 +21,14 @@ HTTP endpoint exposed by your S3 object storage solution which will be made avai
 
 Name of the storage class to be used for PVCs created by JupyterHub component. This requires `storage-class` **overlay** to be enabled as well to work.
 
+#### jupyterhub_groups_config
+
+A ConfigMap containing comma separated lists of groups which would be used as Admin and User groups for JupyterHub. The default ConfgiMap can be found [here](jupyterhub/base/jupyterhub-groups-configmap.yaml).
+
+#### jupyterhub_secret
+
+A Secret containing configuration values like JupyterHub DB password or COOKIE_SECRET. The default Secret can be found [here](jupyterhub/base/jupyterhub-secret.yaml).
+
 ##### Examples
 
 ```
@@ -41,7 +49,7 @@ Name of the storage class to be used for PVCs created by JupyterHub component. T
 
 ### Overlays
 
-JupyterHub component comes with 2 overlays.
+JupyterHub component comes with 3 overlays.
 
 #### build
 
@@ -63,16 +71,22 @@ Notebook Images do not provide any parameters.
 
 Notebook Images component comes with 3 overlays.
 
-#### additional
+#### [additional](notebook-images/overlays/additional/)
 
 Contains additional Jupyter notebook images.
 
-#### build
+#### [build](notebook-images/overlays/build/)
 
 Contains build manifests for Jupyter notebook images.
 
-#### cuda
+#### [cuda](notebook-images/overlays/cuda/)
 
 Contains build chain manifest for CUDA enabled ubi 7 based images, provides `tensorflow-gpu` enabled notebook image.
 
 *NOTE:* Builds in this overlay require 4 GB of memory and 4 cpus
+
+#### [cuda-11.0.3](notebook-images/overlays/cuda-11.0.3/)
+
+Contains build chain manifest for CUDA 11.0.3 enabled ubi 8 based images with python 3.8 support, provides `tensorflow-gpu` and `pytorch-gpu` enabled notebook image.
+
+*NOTE:* Builds in this overlay require 4-6 GB of memory
